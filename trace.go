@@ -48,12 +48,12 @@ func (c *Trace) Init() {
 		tp = sdktrace.NewTracerProvider(
 			sdktrace.WithBatcher(exporter),
 			sdktrace.WithSampler(sdktrace.AlwaysSample()),
-			sdktrace.WithResource(newResource(c.ServiceName)),
+			sdktrace.WithResource(newResource(ServiceName)),
 		)
 	} else {
 		tp = sdktrace.NewTracerProvider(
 			sdktrace.WithBatcher(exporter),
-			sdktrace.WithResource(newResource(c.ServiceName)),
+			sdktrace.WithResource(newResource(ServiceName)),
 		)
 	}
 
