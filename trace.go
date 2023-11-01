@@ -15,19 +15,17 @@ var ServiceName string
 
 type Trace struct {
 	// jaeger 地址
-	JaegerHost string
-	// 默认为false,本地调试时,需要配置对应的 jaeger-collector
-	Local bool `env:""`
+	JaegerHost string `env:""`
+	// 默认为false,本地调试时或使用外部jaeger的时候,需要配置对应的 jaegerHost
+	Internal bool `env:""`
 	// AlwaysSample default false
 	AlwaysSample bool `env:""`
-
-	ServiceName string
-
-	jaegerUrl string
+	ServiceName  string
+	jaegerUrl    string
 }
 
 func (c *Trace) SetDefaults() {
-	if !c.Local {
+	if c.Internal {
 		c.JaegerHost = "http://jaeger-collector.observability:14268"
 	}
 	c.jaegerUrl = fmt.Sprintf("%s/api/traces", c.JaegerHost)
