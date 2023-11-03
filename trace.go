@@ -39,20 +39,16 @@ func (c *Trace) Init() {
 		panic(err)
 	}
 
-	tp := &sdktrace.TracerProvider{}
+	var opts []sdktrace.TracerProviderOption
 	if c.AlwaysSample {
-		tp = sdktrace.NewTracerProvider(
-			sdktrace.WithBatcher(exporter),
-			sdktrace.WithSampler(sdktrace.AlwaysSample()),
-			sdktrace.WithResource(newResource(ServiceName)),
-		)
+		opts = append(opts, sdktrace.WithBatcher(exporter), sdktrace.WithSampler(sdktrace.AlwaysSample()),
+			sdktrace.WithResource(newResource(ServiceName)))
 	} else {
-		tp = sdktrace.NewTracerProvider(
-			sdktrace.WithBatcher(exporter),
-			sdktrace.WithResource(newResource(ServiceName)),
-		)
+		opts = append(opts, sdktrace.WithBatcher(exporter),
+			sdktrace.WithResource(newResource(ServiceName)))
 	}
 
+	tp := sdktrace.NewTracerProvider(opts...)
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(b3prop.New())
 }
@@ -67,6 +63,10 @@ func NewSpan(ctx context.Context, span oteltrace.Span) *Span {
 type Span struct {
 	ctx  context.Context
 	span oteltrace.Span
+}
+
+func (c *Span) TraceSpan() oteltrace.Span {
+	return c.span
 }
 
 func (c *Span) Context() context.Context {
