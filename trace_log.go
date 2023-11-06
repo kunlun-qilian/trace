@@ -3,44 +3,61 @@ package trace
 import (
 	"fmt"
 	"github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
+	"time"
 )
 
-func Info(span *Span, msg interface{}, format ...string) {
+func (c *Span) Info(msg interface{}, format ...string) {
 	if len(format) > 0 {
-		span.span.RecordError(fmt.Errorf(format[0], msg))
 		logrus.Infof(format[0], msg)
-		return
+	} else {
+		logrus.Info(msg)
 	}
-	span.span.RecordError(fmt.Errorf("%v", msg))
-	logrus.Info(msg)
+	c.span.AddEvent("@info",
+		trace.WithTimestamp(time.Now()),
+		trace.WithAttributes(
+			attribute.String("msg", fmt.Sprintf("%v", msg)),
+		))
 }
 
-func Warn(span *Span, msg interface{}, format ...string) {
+func (c *Span) Warn(msg interface{}, format ...string) {
 	if len(format) > 0 {
-		span.span.RecordError(fmt.Errorf(format[0], msg))
 		logrus.Warnf(format[0], msg)
-		return
+	} else {
+		logrus.Warn(msg)
 	}
-	span.span.RecordError(fmt.Errorf("%v", msg))
-	logrus.Warn(msg)
+	c.span.AddEvent("@warn",
+		trace.WithTimestamp(time.Now()),
+		trace.WithAttributes(
+			attribute.String("msg", fmt.Sprintf("%v", msg)),
+		),
+	)
 }
 
-func Error(span *Span, msg interface{}, format ...string) {
+func (c *Span) Error(msg interface{}, format ...string) {
 	if len(format) > 0 {
-		span.span.RecordError(fmt.Errorf(format[0], msg))
 		logrus.Errorf(format[0], msg)
-		return
+	} else {
+		logrus.Error(msg)
 	}
-	span.span.RecordError(fmt.Errorf("%v", msg))
-	logrus.Error(msg)
+	c.span.AddEvent("@error",
+		trace.WithTimestamp(time.Now()),
+		trace.WithAttributes(
+			attribute.String("msg", fmt.Sprintf("%v", msg)),
+		),
+	)
 }
 
-func Debug(span *Span, msg interface{}, format ...string) {
+func (c *Span) Debug(msg interface{}, format ...string) {
 	if len(format) > 0 {
-		span.span.RecordError(fmt.Errorf(format[0], msg))
 		logrus.Debugf(format[0], msg)
-		return
+	} else {
+		logrus.Debug(msg)
 	}
-	span.span.RecordError(fmt.Errorf("%v", msg))
-	logrus.Debug(msg)
+	c.span.AddEvent("@debug",
+		trace.WithTimestamp(time.Now()),
+		trace.WithAttributes(
+			attribute.String("msg", fmt.Sprintf("%v", msg))),
+	)
 }
