@@ -2,7 +2,6 @@ package trace
 
 import (
 	"context"
-	"fmt"
 	b3prop "go.opentelemetry.io/contrib/propagators/b3"
 	"go.opentelemetry.io/otel"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -14,19 +13,19 @@ import (
 var ServiceName string
 
 type Trace struct {
-	// jaeger 地址 本地调试时或使用外部jaeger的时候,需要配置对应的 jaegerHost
+	// jaeger 地址 本地调试时或使用外部jaeger的时候,需要配置对应的 jaegerHost,留空默认访问本集群的jaeger
 	JaegerHost string `env:""`
 	// AlwaysSample default false
 	AlwaysSample bool `env:""`
-	ServiceName  string
-	jaegerUrl    string
+	// 默认启用证书，关闭证书设置为true
+	Insecure    bool `env:""`
+	ServiceName string
 }
 
 func (c *Trace) SetDefaults() {
 	if c.JaegerHost == "" {
-		c.JaegerHost = "http://jaeger-collector.observability:14268"
+		c.JaegerHost = "jaeger-otlp.observability:4318"
 	}
-	c.jaegerUrl = fmt.Sprintf("%s/api/traces", c.JaegerHost)
 }
 
 func (c *Trace) Init() {
@@ -34,7 +33,7 @@ func (c *Trace) Init() {
 
 	ServiceName = c.ServiceName
 
-	exporter, err := newJaegerExporter(c.jaegerUrl)
+	exporter, err := c.newJaegerExporter()
 	if err != nil {
 		panic(err)
 	}

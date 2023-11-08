@@ -1,10 +1,19 @@
 package trace
 
 import (
-    "go.opentelemetry.io/otel/exporters/jaeger"
-    "go.opentelemetry.io/otel/sdk/trace"
+	"context"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/sdk/trace"
 )
 
-func newJaegerExporter(url string) (trace.SpanExporter, error) {
-    return jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+func (c *Trace) newJaegerExporter() (trace.SpanExporter, error) {
+	if c.Insecure {
+		return otlptracehttp.New(context.Background(),
+			otlptracehttp.WithEndpoint(c.JaegerHost),
+			otlptracehttp.WithInsecure(),
+		)
+	}
+	return otlptracehttp.New(context.Background(),
+		otlptracehttp.WithEndpoint(c.JaegerHost),
+	)
 }

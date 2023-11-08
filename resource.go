@@ -9,6 +9,8 @@ func newResource(serviceName string) *resource.Resource {
 	r := resource.NewWithAttributes(
 		semconv.SchemaURL,
 		semconv.ServiceNameKey.String(serviceName),
+		semconv.TelemetrySDKLanguageGo,
+		semconv.TelemetrySDKNameKey.String("opentelemetry"),
 	)
 	return r
 }

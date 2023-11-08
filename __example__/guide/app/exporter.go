@@ -1,11 +1,13 @@
 package app
 
 import (
-	"go.opentelemetry.io/otel/exporters/jaeger"
+	"context"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/sdk/trace"
 )
 
 func NewJaegerExporter(url string) (trace.SpanExporter, error) {
-	urlSuffix := "/api/traces"
-	return jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url + urlSuffix)))
+	return otlptracehttp.New(context.Background(),
+		otlptracehttp.WithEndpoint(url),
+	)
 }

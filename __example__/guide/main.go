@@ -13,7 +13,7 @@ import (
 func main() {
 	l := log.New(os.Stdout, "", 0)
 
-	exp, err := app.NewJaegerExporter("https://jaeger---observability.observability")
+	exp, err := app.NewJaegerExporter("jaeger-otlp---observability.devops-jiahuayun-dev.rockontrol.com")
 	if err != nil {
 		l.Fatal(err)
 	}
