@@ -18,7 +18,9 @@ type Trace struct {
 	// AlwaysSample default false
 	AlwaysSample bool `env:""`
 	// 默认启用证书，关闭证书设置为true
-	Insecure    bool `env:""`
+	Insecure bool `env:""`
+	// AccessToken  访问Jaeger的access token,可以为空
+	AccessToken string `env:""`
 	ServiceName string
 }
 
