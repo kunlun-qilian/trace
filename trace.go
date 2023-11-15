@@ -26,7 +26,7 @@ type Trace struct {
 
 func (c *Trace) SetDefaults() {
 	if c.JaegerHost == "" {
-		c.JaegerHost = "jaeger-otlp.observability:4318"
+		c.JaegerHost = "jaeger-collector.observability:4318"
 	}
 }
 
