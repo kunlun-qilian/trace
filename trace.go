@@ -92,5 +92,9 @@ type ContextTraceSpan struct {
 var ContextTraceSpanKey = reflect.TypeOf(ContextTraceSpan{}).String()
 
 func GetTraceSpanFromContext(ctx context.Context) *Span {
-	return ctx.Value(ContextTraceSpanKey).(*Span)
+	span := ctx.Value(ContextTraceSpanKey)
+	if span == nil {
+		return nil
+	}
+	return span.(*Span)
 }
