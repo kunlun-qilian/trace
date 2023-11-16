@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 	"time"
 )
@@ -41,6 +42,8 @@ func (c *Span) Error(msg interface{}, format ...string) {
 	} else {
 		logrus.Error(msg)
 	}
+
+	c.span.SetStatus(codes.Error, "")
 	c.span.AddEvent("@error",
 		trace.WithTimestamp(time.Now()),
 		trace.WithAttributes(
