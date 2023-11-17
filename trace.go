@@ -21,7 +21,7 @@ type Trace struct {
 	Insecure bool `env:""`
 	// AccessToken  访问Jaeger的access token,可以为空
 	AccessToken string `env:""`
-	ServiceName string
+	ServiceName string `env:""`
 }
 
 func (c *Trace) SetDefaults() {
