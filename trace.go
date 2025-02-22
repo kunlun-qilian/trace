@@ -2,12 +2,12 @@ package trace
 
 import (
 	"context"
+	"time"
+
 	b3prop "go.opentelemetry.io/contrib/propagators/b3"
 	"go.opentelemetry.io/otel"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	oteltrace "go.opentelemetry.io/otel/trace"
-	"reflect"
-	"time"
 )
 
 var ServiceName string
@@ -89,10 +89,10 @@ func Start(ctx context.Context, spanName string, opts ...oteltrace.SpanStartOpti
 type ContextTraceSpan struct {
 }
 
-var ContextTraceSpanKey = reflect.TypeOf(ContextTraceSpan{}).String()
+// var ContextTraceSpanKey = reflect.TypeOf(ContextTraceSpan{}).String()
 
 func GetTraceSpanFromContext(ctx context.Context) *Span {
-	span := ctx.Value(ContextTraceSpanKey)
+	span := ctx.Value(ContextTraceSpan{})
 	if span == nil {
 		return nil
 	}
